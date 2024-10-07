@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GelP - Gestión de Electrodomésticos</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>GelP - Gestión de Electrodomésticos</h1>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('register')">Registrar</button>
+            <button class="tab-button" onclick="showTab('search')">Buscar</button>
+            <button class="tab-button" onclick="showTab('list')">Listar</button>
+            <button class="tab-button" onclick="showTab('group')">Agrupar</button>
+        </div>
+
+        <!-- Registro -->
+        <div id="register" class="tab-content active">
+            <h2>Registrar Electrodoméstico</h2>
+            <form id="registerForm" onsubmit="registerAppliance(event)">
+                <div class="form-group">
+                    <label for="code">Código:</label>
+                    <input type="text" id="code" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Nombre:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">Estado:</label>
+                    <select id="state" required>
+                        <option value="Pending">Pendiente</option>
+                        <option value="Approved">Aprobado</option>
+                        <option value="Rejected">Rechazado</option>
+                    </select>
+                </div>
+                <button type="submit">Registrar</button>
+            </form>
+        </div>
+
+        <!-- Búsqueda -->
+        <div id="search" class="tab-content">
+            <h2>Buscar Electrodoméstico</h2>
+            <div class="search-group">
+                <input type="text" id="searchInput" placeholder="Buscar por código o nombre...">
+                <button onclick="searchAppliances()">Buscar</button>
+            </div>
+            <div id="searchResults"></div>
+        </div>
+
+        <!-- Listado -->
+        <div id="list" class="tab-content">
+            <h2>Listado de Electrodomésticos</h2>
+            <table id="applianceTable">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Agrupación -->
+        <div id="group" class="tab-content">
+            <h2>Agrupar Electrodomésticos</h2>
+            <div id="groupedAppliances"></div>
+        </div>
+
+        <div id="successMessage" class="message success"></div>
+        <div id="errorMessage" class="message error"></div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+
+            // Llama a listAppliances si se muestra la pestaña de Listar
+            if (tabName === 'list') {
+                listAppliances();
+            }
+        }
+
+        // Llama a listAppliances en la carga inicial de la página (opcional)
+        document.addEventListener('DOMContentLoaded', listAppliances);
+    </script>
+</body>
+</html>
